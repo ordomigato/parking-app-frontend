@@ -1,10 +1,16 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logout } from "../../../store/actions/auth";
 
 const ProfileMenu = ({ profileItems, auth, logout }) => {
+  const history = useHistory();
+
+  const handleLogout = () => {
+    history.push("/");
+    logout();
+  };
   return (
     <div className="pt-4 pb-3 border-t border-gray-700">
       <div className="flex items-center px-5">
@@ -18,7 +24,7 @@ const ProfileMenu = ({ profileItems, auth, logout }) => {
         </div>
       </div>
       <div className="mt-3 px-2 space-y-1">
-        {profileItems.map((item) => (
+        {profileItems.map(item => (
           <NavLink
             activeClassName="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
             to={item.link}
@@ -28,7 +34,7 @@ const ProfileMenu = ({ profileItems, auth, logout }) => {
             {item.name}
           </NavLink>
         ))}
-        {auth.isAdmin && (
+        {[1, 2].includes(auth.user.role) && (
           <NavLink
             activeClassName="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
             to={`/admin`}
@@ -39,7 +45,7 @@ const ProfileMenu = ({ profileItems, auth, logout }) => {
         )}
         <button
           className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-          onClick={(e) => logout()}
+          onClick={e => handleLogout()}
         >
           Sign Out
         </button>
@@ -52,7 +58,7 @@ ProfileMenu.propTypes = {
   logout: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   auth: state.auth,
 });
 

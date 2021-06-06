@@ -37,8 +37,9 @@ const ConfirmationReview = ({
                 value={submittedPermit.vplate}
               />
               <EntryField
-                name={"Vehicle's Info"}
-                value={`${submittedPermit.vmake} / ${submittedPermit.vmodel} (${submittedPermit.vcolor})`}
+                name={"Vehicle's Color"}
+                // ${submittedPermit.vmake} / ${submittedPermit.vmodel}
+                value={`${submittedPermit.vcolor}`}
               />
               <EntryField
                 name={"Location"}

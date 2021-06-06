@@ -17,7 +17,8 @@ const useStyles = makeStyles({
 
 const FormPartTwo = ({
   formData,
-  formData: { vplate, vmodel, vmake, vcolor },
+  // add vmodel, vmake if wanted
+  formData: { vplate, vcolor },
   updateVRFormData,
   setNextButtonState,
 }) => {
@@ -29,7 +30,7 @@ const FormPartTwo = ({
     vcolorError: true,
   });
 
-  const onChange = e => {
+  const onChange = (e) => {
     const { value, name } = e.target;
     const newData = { key: name, value: value };
     updateVRFormData(newData);
@@ -39,7 +40,8 @@ const FormPartTwo = ({
   };
 
   useEffect(() => {
-    const fields = { vplate, vmodel, vmake, vcolor };
+    // add vmodel, vmake if wanted
+    const fields = { vplate, vcolor };
     const allValid = checkAllFields(fields);
     setNextButtonState(allValid);
   }, [formData]);
@@ -63,7 +65,7 @@ const FormPartTwo = ({
             },
           }}
           required
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         />
       </Grid>
       <Grid item xs={6}>
@@ -83,10 +85,10 @@ const FormPartTwo = ({
             },
           }}
           required
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         />
       </Grid>
-      <Grid item xs={6}>
+      {/* <Grid item xs={6}>
         <TextField
           color="secondary"
           label="Vehicle Make"
@@ -103,7 +105,7 @@ const FormPartTwo = ({
             },
           }}
           required
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         />
       </Grid>
       <Grid item xs={6}>
@@ -123,9 +125,9 @@ const FormPartTwo = ({
             },
           }}
           required
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
@@ -134,7 +136,7 @@ FormPartTwo.propTypes = {
   updateVRFormData: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   formData: state.registerVRFormData.formData,
 });
 

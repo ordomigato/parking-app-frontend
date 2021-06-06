@@ -15,7 +15,7 @@ import {
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
-  isAdmin: null,
+  // isAdmin: null,
   errors: [],
   loading: true,
   user: null,
@@ -29,7 +29,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         isAuthenticated: true,
-        isAdmin: payload.role === 1 || 2 ? true : false,
+        // isAdmin: payload.role === 1 || 2 ? true : false,
         loading: false,
         user: payload,
         errors: {
@@ -45,7 +45,7 @@ export default function auth(state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
-        isAdmin: false,
+        // isAdmin: false,
         loading: false,
         errors: [],
       };
@@ -64,7 +64,7 @@ export default function auth(state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
-        isAdmin: false,
+        // isAdmin: false,
         loading: false,
         errors: { login: payload },
       };
@@ -74,7 +74,7 @@ export default function auth(state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
-        isAdmin: false,
+        // isAdmin: false,
         loading: false,
         errors: [],
       };

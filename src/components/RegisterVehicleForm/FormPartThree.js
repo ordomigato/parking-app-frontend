@@ -28,6 +28,7 @@ const FormPartThree = ({
   formData: { location, sublocation, unit, duration },
   updateVRFormData,
   locations,
+  loading,
   setNextButtonState,
   updateSelectedLocation,
   selectedLocation,
@@ -80,6 +81,8 @@ const FormPartThree = ({
 
   useEffect(() => {
     let fields = { location, unit };
+    // if no locations exist, return
+    if (!location) return;
     // check if fields are required
     if (selectedLocation) {
       if (Object.keys(selectedLocation).length !== 0) {
@@ -96,102 +99,112 @@ const FormPartThree = ({
   }, [location, sublocation, duration, unit]);
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <FormControl variant="outlined" fullWidth>
-          <InputLabel>Select Location</InputLabel>
-          <Select
-            label="Select Location"
-            name="location"
-            value={location.id}
-            onChange={(e) => onChange(e)}
-          >
-            {locations && locations.length > 0
-              ? locations.map((loc) => (
+    <>
+      {locations.length > 0 && !loading ? (
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel>Select Location</InputLabel>
+              <Select
+                label="Select Location"
+                name="location"
+                value={location.id}
+                onChange={(e) => onChange(e)}
+              >
+                {locations.map((loc) => (
                   <MenuItem value={loc.id} key={loc.id}>
                     {loc.name}
                   </MenuItem>
-                ))
-              : "Seems like we can't grab any locations"}
-          </Select>
-        </FormControl>
-      </Grid>
-      {selectedLocation && selectedLocation.sublocations.length > 0 ? (
-        <Grid item xs={12}>
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel>Select an Option</InputLabel>
-            <Select
-              label="Select an Option"
-              name="sublocation"
-              value={sublocation.id || ""}
-              error={!validation.sublocationError}
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          {selectedLocation && selectedLocation.sublocations.length > 0 ? (
+            <Grid item xs={12}>
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel>Select an Option</InputLabel>
+                <Select
+                  label="Select an Option"
+                  name="sublocation"
+                  value={sublocation.id || ""}
+                  error={!validation.sublocationError}
+                  required
+                  onChange={(e) => onChange(e)}
+                >
+                  {selectedLocation.sublocations
+                    ? selectedLocation.sublocations.map((loc) => (
+                        <MenuItem value={loc.id} key={loc.id}>
+                          {loc.name}
+                        </MenuItem>
+                      ))
+                    : "Seems like something went wrong"}
+                </Select>
+              </FormControl>
+            </Grid>
+          ) : (
+            ""
+          )}
+          <Grid item xs={6}>
+            <TextField
+              color="secondary"
+              label="Unit Number Visiting"
+              variant="outlined"
+              name="unit"
+              type="text"
+              fullWidth
+              value={unit}
+              error={!validation.unitError}
+              helperText="Please enter the unit number you are visiting"
+              FormHelperTextProps={{
+                classes: {
+                  root: validation.unitError
+                    ? classes.isValid
+                    : classes.notValid,
+                },
+              }}
               required
               onChange={(e) => onChange(e)}
-            >
-              {selectedLocation.sublocations
-                ? selectedLocation.sublocations.map((loc) => (
-                    <MenuItem value={loc.id} key={loc.id}>
-                      {loc.name}
-                    </MenuItem>
-                  ))
-                : "Seems like something went wrong"}
-            </Select>
-          </FormControl>
+            />
+          </Grid>
+          {selectedLocation && (
+            <Grid item xs={6}>
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel id="demo-simple-select-filled-label">
+                  Duration
+                </InputLabel>
+                <Select
+                  label="Duration"
+                  name="duration"
+                  value={duration}
+                  onChange={(e) => onChange(e)}
+                >
+                  {Array.from(
+                    { length: selectedLocation.maxFormDuration + 1 },
+                    (v, i) => (
+                      <MenuItem key={i} value={i}>
+                        {i === 0 ? (
+                          <span>Just the Day</span>
+                        ) : i === 1 ? (
+                          <span>{`${i} night`}</span>
+                        ) : (
+                          <span>{`${i} nights`}</span>
+                        )}
+                      </MenuItem>
+                    )
+                  )}
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
         </Grid>
       ) : (
-        ""
-      )}
-      <Grid item xs={6}>
-        <TextField
-          color="secondary"
-          label="Unit Number Visiting"
-          variant="outlined"
-          name="unit"
-          type="text"
-          fullWidth
-          value={unit}
-          error={!validation.unitError}
-          helperText="Please enter the unit number you are visiting"
-          FormHelperTextProps={{
-            classes: {
-              root: validation.unitError ? classes.isValid : classes.notValid,
-            },
-          }}
-          required
-          onChange={(e) => onChange(e)}
-        />
-      </Grid>
-      {selectedLocation && (
-        <Grid item xs={6}>
-          <FormControl variant="outlined" fullWidth>
-            <InputLabel id="demo-simple-select-filled-label">
-              Duration
-            </InputLabel>
-            <Select
-              label="Duration"
-              name="duration"
-              value={duration}
-              onChange={(e) => onChange(e)}
-            >
-              {Array.from(
-                { length: selectedLocation.maxFormDuration + 1 },
-                (v, i) => (
-                  <MenuItem key={i} value={i}>
-                    {i === 0 ? (
-                      <span>Just the Day</span>
-                    ) : i === 1 ? (
-                      <span>{`${i} night`}</span>
-                    ) : (
-                      <span>{`${i} nights`}</span>
-                    )}
-                  </MenuItem>
-                )
-              )}
-            </Select>
-          </FormControl>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <p>No locations were found</p>
+          </Grid>
         </Grid>
       )}
-    </Grid>
+    </>
   );
 };
 
@@ -203,6 +216,7 @@ FormPartThree.propTypes = {
 const mapStateToProps = (state) => ({
   formData: state.registerVRFormData.formData,
   locations: state.locations.data,
+  loading: state.locations.loading,
   selectedLocation: state.registerVRFormData.selectedLocation,
 });
 

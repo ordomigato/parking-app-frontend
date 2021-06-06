@@ -5,26 +5,33 @@ import PropTypes from "prop-types";
 
 const AdminRoute = ({
   component: Component,
-  auth: { isAdmin, loading },
+  auth: { user, loading },
+  permittedRoles,
   ...rest
-}) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      !isAdmin && !loading ? (
-        <Redirect to="/" />
-      ) : (
-        !loading && <Component {...props} />
-      )
-    }
-  />
-);
+}) => {
+  return (
+    <>
+      {user && (
+        <Route
+          {...rest}
+          render={props =>
+            !permittedRoles.includes(user.role) && !loading ? (
+              <Redirect to="/" />
+            ) : (
+              !loading && <Component {...props} />
+            )
+          }
+        />
+      )}
+    </>
+  );
+};
 
 AdminRoute.propTypes = {
   auth: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   auth: state.auth,
 });
 

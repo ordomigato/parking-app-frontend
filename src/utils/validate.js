@@ -27,12 +27,14 @@ const checkField = (value, name) => {
       return value === "" ? false : true;
     case "duration":
       return value === "" ? false : true;
+    case "sublocationName":
+      return value === "" ? false : true;
     default:
       return true;
   }
 };
 
-const checkAllFields = (fields) => {
+const checkAllFields = fields => {
   let result = true;
   for (const [key, value] of Object.entries(fields)) {
     const valid = checkField(value, key);

@@ -14,8 +14,8 @@ const FormConfirmation = ({
     email,
     defaultPhone,
     vplate,
-    vmodel,
-    vmake,
+    // vmodel,
+    // vmake,
     vcolor,
   },
   selectedLocation,
@@ -47,8 +47,8 @@ const FormConfirmation = ({
         <div>
           <Entry label="Plate #" value={vplate} />
           <Entry label="Colour" value={vcolor} />
-          <Entry label="Make" value={vmake} />
-          <Entry label="Model" value={vmodel} />
+          {/* <Entry label="Make" value={vmake} />
+          <Entry label="Model" value={vmodel} /> */}
         </div>
       </Grid>
       <Grid item xs={12} sm={6}>

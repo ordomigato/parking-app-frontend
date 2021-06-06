@@ -16,7 +16,7 @@ import setAuthToken from "../../utils/setAuthToken";
 import { AccordionSummary } from "@material-ui/core";
 
 // Load User
-export const loadUser = () => async (dispatch) => {
+export const loadUser = () => async dispatch => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
   }
@@ -36,7 +36,7 @@ export const loadUser = () => async (dispatch) => {
 };
 
 // Login user
-export const login = (email, password) => async (dispatch) => {
+export const login = (email, password) => async dispatch => {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export const login = (email, password) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     const errorsArray = [];
-    errors.forEach((error) => errorsArray.push(error.msg));
+    errors.forEach(error => errorsArray.push(error.msg));
     dispatch({
       type: LOGIN_FAIL,
       payload: errorsArray,
@@ -70,7 +70,7 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // Register User
-export const register = (user) => async (dispatch) => {
+export const register = user => async dispatch => {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export const register = (user) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     const errorsArray = [];
-    errors.forEach((error) => errorsArray.push(error.msg));
+    errors.forEach(error => errorsArray.push(error.msg));
     dispatch({
       type: REGISTER_FAIL,
       payload: errorsArray,
@@ -104,7 +104,7 @@ export const register = (user) => async (dispatch) => {
 };
 
 // Update current user
-export const updateCurrentUser = (userData) => async (dispatch) => {
+export const updateCurrentUser = userData => async dispatch => {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export const updateCurrentUser = (userData) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     const errorsArray = [];
-    errors.forEach((error) => errorsArray.push(error.msg));
+    errors.forEach(error => errorsArray.push(error.msg));
     dispatch({
       type: UPDATE_CURRENT_USER_FAILURE,
       payload: errorsArray,
@@ -137,7 +137,7 @@ export const updateCurrentUser = (userData) => async (dispatch) => {
 };
 
 // change current user's password
-export const changePassword = (passwordData) => async (dispatch) => {
+export const changePassword = passwordData => async dispatch => {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -161,7 +161,7 @@ export const changePassword = (passwordData) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     const errorsArray = [];
-    errors.forEach((error) => errorsArray.push(error.msg));
+    errors.forEach(error => errorsArray.push(error.msg));
     dispatch({
       type: UPDATE_CURRENT_USER_PASSWORD_FAILURE,
       payload: errorsArray,
@@ -170,6 +170,6 @@ export const changePassword = (passwordData) => async (dispatch) => {
 };
 
 // Logout & Clear Profile
-export const logout = () => (dispatch) => {
+export const logout = () => dispatch => {
   dispatch({ type: LOGOUT });
 };

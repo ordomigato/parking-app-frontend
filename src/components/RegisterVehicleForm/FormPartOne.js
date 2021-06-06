@@ -19,7 +19,6 @@ const FormPartOne = ({
   formData: { firstName, lastName, email, defaultPhone },
   updateVRFormData,
   setNextButtonState,
-  user,
 }) => {
   const classes = useStyles();
   const [validation, setValidation] = useState({
@@ -29,7 +28,7 @@ const FormPartOne = ({
     defaultPhoneError: true,
   });
 
-  const onChange = (e) => {
+  const onChange = e => {
     // Update form
     const { value, name } = e.target;
     const newData = { key: name, value: value };
@@ -68,7 +67,7 @@ const FormPartOne = ({
             },
           }}
           required
-          onChange={(e) => onChange(e)}
+          onChange={e => onChange(e)}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -90,7 +89,7 @@ const FormPartOne = ({
             },
           }}
           error={!validation.lastNameError}
-          onChange={(e) => onChange(e)}
+          onChange={e => onChange(e)}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -103,13 +102,14 @@ const FormPartOne = ({
           fullWidth
           value={email}
           error={!validation.emailError}
+          required
           helperText="ex. email@domain.com"
           FormHelperTextProps={{
             classes: {
               root: validation.emailError ? classes.isValid : classes.notValid,
             },
           }}
-          onChange={(e) => onChange(e)}
+          onChange={e => onChange(e)}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -122,6 +122,7 @@ const FormPartOne = ({
           fullWidth
           value={defaultPhone}
           error={!validation.defaultPhoneError}
+          required
           helperText="ex. xxx-xxx-xxxx"
           FormHelperTextProps={{
             classes: {
@@ -130,7 +131,7 @@ const FormPartOne = ({
                 : classes.notValid,
             },
           }}
-          onChange={(e) => onChange(e)}
+          onChange={e => onChange(e)}
         />
       </Grid>
     </Grid>
@@ -141,9 +142,8 @@ FormPartOne.propTypes = {
   updateVRFormData: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   formData: state.registerVRFormData.formData,
-  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { updateVRFormData })(FormPartOne);

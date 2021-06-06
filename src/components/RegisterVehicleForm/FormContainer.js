@@ -10,7 +10,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { getLocations } from "../../store/actions/locations";
-import { submitVRFormData } from "../../store/actions/registerFormData";
+import {
+  initializeVRFormData,
+  submitVRFormData,
+  clearErrors,
+} from "../../store/actions/registerFormData";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FormPartOne from "./FormPartOne";
@@ -20,7 +24,7 @@ import FormConfirmation from "./FormConfirmation";
 import ErrorMessage from "../Message/ErrorMessage";
 import ConfirmationReview from "../Message/ConfirmationReview";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: "90%",
     maxWidth: "768px",
@@ -65,9 +69,11 @@ function getStepContent(step, setNextButtonState) {
 const RegisterVehicleFormContainer = ({
   getLocations,
   submitVRFormData,
+  initializeVRFormData,
   formData,
   errors,
-  user,
+  clearErrors,
+  auth: { user, isAuthenticated },
 }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
@@ -76,23 +82,37 @@ const RegisterVehicleFormContainer = ({
 
   useEffect(() => {
     getLocations();
+    isAuthenticated && initializeForm(user);
   }, [user]);
 
+  const initializeForm = user => {
+    const formattedInfo = {
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      defaultPhone: user.defaultPhone || "",
+    };
+    initializeVRFormData(formattedInfo);
+  };
+
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    clearErrors();
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    clearErrors();
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleReset = () => {
+    clearErrors();
     setActiveStep(0);
   };
 
   const handleSubmit = async () => {
+    clearErrors();
     await submitVRFormData(formData, user.id).then(({ success }) => {
-      console.log(success);
       success ? handleNext() : null;
     });
   };
@@ -100,7 +120,7 @@ const RegisterVehicleFormContainer = ({
   return (
     <form className={classes.root}>
       {errors &&
-        errors.map((error) => <ErrorMessage message={error} key={error} />)}
+        errors.map(error => <ErrorMessage message={error} key={error} />)}
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label}>
@@ -154,16 +174,21 @@ const RegisterVehicleFormContainer = ({
 
 RegisterVehicleFormContainer.propTypes = {
   getLocations: PropTypes.func.isRequired,
+  initializeVRFormData: PropTypes.func.isRequired,
   submitVRFormData: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   formData: state.registerVRFormData.formData,
   submittedPermit: state.registerVRFormData.submittedPermit,
   errors: state.registerVRFormData.errors,
-  user: state.auth.user,
+  auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getLocations, submitVRFormData })(
-  RegisterVehicleFormContainer
-);
+export default connect(mapStateToProps, {
+  getLocations,
+  initializeVRFormData,
+  submitVRFormData,
+  clearErrors,
+})(RegisterVehicleFormContainer);

@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { updateCurrentUser } from "../../../../store/actions/auth";
 import { checkField, checkAllFields } from "../../../../utils/validate";
 import ErrorMessage from "../../../Message/ErrorMessage";
+import SuccessMessage from "../../../Message/SuccessMessage";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,6 +46,7 @@ const EditInfo = ({ user, errors, updateCurrentUser }) => {
     email: user.email,
     defaultPhone: user.defaultPhone,
   });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const onChange = (e) => {
     const { value, name } = e.target;
@@ -65,19 +67,21 @@ const EditInfo = ({ user, errors, updateCurrentUser }) => {
       defaultPhone: userData.defaultPhone,
     };
     const allValid = checkAllFields(fields);
-    console.log(allValid);
     setButtonState(allValid);
   }, [userData]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    updateCurrentUser(userData);
+    updateCurrentUser(userData).then((res) =>
+      setSuccessMessage(res.data.message)
+    );
   };
 
   return (
     <Container component="main" maxWidth="xs">
       {errors &&
         errors.map((error) => <ErrorMessage message={error} key={error} />)}
+      {successMessage && <SuccessMessage message={successMessage} />}
       <div className={classes.paper}>
         <h2 component="h1" variant="h5">
           Edit Personal Information

@@ -1,26 +1,35 @@
 import {
+  INITIALIZE_FORM,
   UPDATE_VEHICLE_REGISTER_FORM_DATA,
   SUBMIT_PERMIT_SUCCESS,
   SUBMIT_PERMIT_FAIL,
   SELECTED_LOCATION_UPDATE,
+  CLEAR_ERRORS,
 } from "./types";
 import axios from "axios";
 
-export const updateVRFormData = (payload) => (dispatch) => {
+export const initializeVRFormData = info => dispatch => {
+  dispatch({
+    type: INITIALIZE_FORM,
+    payload: info,
+  });
+};
+
+export const updateVRFormData = payload => dispatch => {
   dispatch({
     type: UPDATE_VEHICLE_REGISTER_FORM_DATA,
     payload: payload,
   });
 };
 
-export const updateSelectedLocation = (payload) => (dispatch) => {
+export const updateSelectedLocation = payload => dispatch => {
   dispatch({
     type: SELECTED_LOCATION_UPDATE,
     payload: payload,
   });
 };
 
-export const submitVRFormData = (payload, userId) => async (dispatch) => {
+export const submitVRFormData = (payload, userId) => async dispatch => {
   const formData = { ...payload };
 
   // format data presend
@@ -52,7 +61,7 @@ export const submitVRFormData = (payload, userId) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     const errorsArray = [];
-    errors.forEach((error) => errorsArray.push(error.msg));
+    errors.forEach(error => errorsArray.push(error.msg));
     dispatch({
       type: SUBMIT_PERMIT_FAIL,
       payload: errorsArray,
@@ -60,4 +69,10 @@ export const submitVRFormData = (payload, userId) => async (dispatch) => {
 
     return err.response.data.success;
   }
+};
+
+export const clearErrors = () => dispatch => {
+  dispatch({
+    type: CLEAR_ERRORS,
+  });
 };

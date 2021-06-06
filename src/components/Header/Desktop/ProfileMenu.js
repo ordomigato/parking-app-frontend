@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { logout } from "../../../store/actions/auth";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 
 const ProfileMenu = ({ auth, profileItems, logout }) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+  const history = useHistory();
+
+  const handleLogout = () => {
+    history.push("/");
+    logout();
+  };
 
   return (
     <div className="hidden md:block z-40">
@@ -15,7 +22,7 @@ const ProfileMenu = ({ auth, profileItems, logout }) => {
         {/* Profile Dropdown */}
         <div
           className="ml-3 relative"
-          onFocus={(e) => {
+          onFocus={e => {
             if (e.currentTarget === e.target) {
               setProfileMenuOpen(true);
             } else {
@@ -25,7 +32,7 @@ const ProfileMenu = ({ auth, profileItems, logout }) => {
               setProfileMenuOpen(true);
             }
           }}
-          onBlur={(e) => {
+          onBlur={e => {
             if (e.currentTarget === e.target) {
               setProfileMenuOpen(true);
             } else {
@@ -54,30 +61,30 @@ const ProfileMenu = ({ auth, profileItems, logout }) => {
             aria-orientation="vertical"
             aria-labelledby="user-menu"
           >
-            {profileItems.map((item) => (
+            {profileItems.map(item => (
               <NavLink
                 activeClassName="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 to={item.link}
                 key={item.link}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                onClick={(e) => setProfileMenuOpen(false)}
+                onClick={e => setProfileMenuOpen(false)}
               >
                 {item.name}
               </NavLink>
             ))}
-            {auth.isAdmin && (
+            {[1, 2].includes(auth.user.role) && (
               <NavLink
                 activeClassName="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 to={`/admin`}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                onClick={(e) => setProfileMenuOpen(false)}
+                onClick={e => setProfileMenuOpen(false)}
               >
                 Admin Dashboard
               </NavLink>
             )}
             <button
               className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-              onClick={(e) => logout()}
+              onClick={e => handleLogout()}
             >
               Sign Out
             </button>
@@ -92,7 +99,7 @@ ProfileMenu.propTypes = {
   logout: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   auth: state.auth,
 });
 

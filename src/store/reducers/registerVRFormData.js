@@ -1,8 +1,10 @@
 import {
+  INITIALIZE_FORM,
   UPDATE_VEHICLE_REGISTER_FORM_DATA,
   SUBMIT_PERMIT_SUCCESS,
   SUBMIT_PERMIT_FAIL,
   SELECTED_LOCATION_UPDATE,
+  CLEAR_ERRORS,
 } from "../actions/types";
 
 const initialState = {
@@ -37,6 +39,12 @@ export default function registerVRFormData(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case INITIALIZE_FORM:
+      return {
+        ...state,
+        formData: { ...state.formData, ...payload },
+        loading: false,
+      };
     case UPDATE_VEHICLE_REGISTER_FORM_DATA:
       return {
         ...state,
@@ -62,6 +70,12 @@ export default function registerVRFormData(state = initialState, action) {
         ...state,
         loading: false,
         selectedLocation: payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        loading: false,
+        errors: [],
       };
     default:
       return state;

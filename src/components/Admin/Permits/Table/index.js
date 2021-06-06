@@ -79,11 +79,12 @@ const PermitsTable = ({ permits, deletePermit, updatePermit }) => {
       },
       {
         title: "Submitted",
-        field: "formattedCreatedAt",
+        field: "createdAt",
+        type: "datetime",
         hiddenByColumnsButton: true,
         hidden: true,
       },
-      { title: "Expiry", field: "formattedExpDate" },
+      { title: "Expiry", field: "expDate", type: "datetime" },
     ],
     data: [],
     currentDate: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -99,17 +100,11 @@ const PermitsTable = ({ permits, deletePermit, updatePermit }) => {
   };
 
   useEffect(() => {
-    const permitsArray = permits.map((permit) => {
+    const permitsArray = permits.map(permit => {
       const permitData = { ...permit };
-      permitData.formattedExpDate = moment(permit.expDate).format(
-        "MMMM Do YYYY, h:mm a"
-      );
-      permitData.formattedCreatedAt = moment(permit.createdAt).format(
-        "MMMM Do YYYY, h:mm a"
-      );
       return permitData;
     });
-    setState((s) => ({ ...s, data: permitsArray }));
+    setState(s => ({ ...s, data: permitsArray }));
   }, [permits, setState]);
 
   return (
@@ -126,7 +121,7 @@ const PermitsTable = ({ permits, deletePermit, updatePermit }) => {
           exportButton: true,
           actionsColumnIndex: -1,
           selection: true,
-          rowStyle: (rowData) => {
+          rowStyle: rowData => {
             if (moment(state.currentDate).isAfter(rowData.expDate)) {
               return { backgroundColor: "rgba(252, 165, 165", color: "white" };
             }
@@ -138,27 +133,28 @@ const PermitsTable = ({ permits, deletePermit, updatePermit }) => {
             tooltip: "Remove All Selected Permits",
             icon: "delete",
             onClick: (evt, data) => {
-              const permitIds = data.map((permit) => permit.id);
+              const permitIds = data.map(permit => permit.id);
               deletePermit(permitIds)
-                .then((res) =>
+                .then(res =>
                   setSnackbar({ message: res.data.message[0], isOpen: true })
                 )
-                .catch((err) => console.log(err));
+                .catch(err => console.log(err));
             },
           },
         ]}
         editable={{
           onRowUpdate: (newData, oldData) =>
-            new Promise((resolve) => {
+            new Promise(resolve => {
+              console.log(newData);
               updatePermit(newData)
-                .then((res) => {
+                .then(res => {
                   setSnackbar({
                     message: res.data.message[0],
                     isOpen: true,
                   });
                   return resolve();
                 })
-                .catch((err) => console.log(err));
+                .catch(err => console.log(err));
             }),
         }}
       />

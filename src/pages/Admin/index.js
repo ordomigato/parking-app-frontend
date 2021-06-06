@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Permits from "../../components/Admin/Permits";
 import Locations from "../../components/Admin/Locations";
+import Accounts from "../../components/Admin/Accounts";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,7 +95,7 @@ export default function Admin() {
         <Locations />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Accounts
+        <Accounts />
       </TabPanel>
     </div>
   );

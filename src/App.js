@@ -40,7 +40,12 @@ function App() {
               {/* user dashboard */}
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               {/* admin routes */}
-              <AdminRoute exact path="/admin" component={Admin} />
+              <AdminRoute
+                exact
+                path="/admin"
+                component={Admin}
+                permittedRoles={[1, 2]}
+              />
               {/* 404 */}
               <Route component={NotFound} />
             </Switch>
